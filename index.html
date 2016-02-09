@@ -12,6 +12,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.2.1/mustache.js"></script>
     <script src="kobolds.js"></script>
+    <script src="artifacts.js"></script>
 </head>
 
 <body>
@@ -95,7 +96,10 @@
                     $("#dice").hide();
                     $("#result").hide();
 
-                    templateNames = ['#title', '#description']
+                    $("#title").html("{{title}}");
+                    $("#description").html("{{description}}");
+
+                    templateNames = ['#title', '#description'];
                     for (var i=0; i<templateNames.length; i++) {
                         var templateName = templateNames[i];
                         var template = $(templateName).html();
