@@ -1,1 +1,1 @@
-# spicy-tables
+# kobold-spice

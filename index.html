@@ -1,0 +1,179 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Spicy Kobolds</title>
+    <meta name="description" content="For adding spice to RPG encounters.">
+    <meta name="author" content="Matt Fister">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.2.1/mustache.js"></script>
+    <script src="kobolds.js"></script>
+</head>
+
+<body>
+<div class="container">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid"/>
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Spicy Tables</a>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Pick a Table <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="#" onclick="loadTable('kobolds')">Spicy Kobolds</a></li>
+                    <li><a href="#" onclick="loadTable('artifacts')">Spicy Artifacts</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    <div class="panel panel-default" style="max-width: 800px; margin-left: auto; margin-right: auto;">
+        <div class="panel-heading"><h2 class="text-center" id="title">{{title}}</h2></div>
+        <div class="panel-body">
+            <div class="well">
+                <p id="description">{{description}}</p>
+            </div>
+            <br/>
+            <div>
+                <div class="well">
+                    <form class="navbar-form">
+                        <div class = "form-group">
+                            <div class="btn-toolbar">
+                                <div class="btn-group btn-toggle btn-radio" data-toggle="buttons">
+                                    <label class="btn btn-info" id="disadvantage"><input type="radio" name="options" autocomplete="off">Disadvantage</label>
+                                    <label class="btn btn-info" id="neutral"><input type="radio" name="options" autocomplete="off">Neutral</label>
+                                    <label class="btn btn-info" id="advantage"><input type="radio" name="options" autocomplete="off">Advantage</label>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-primary navbar-btn" onclick="roll(); return false;">Roll D20</button>
+                    </form>
+                </div>
+                <div class="row" hidden id="dice">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-1"><h2><span class="label label-default" id="d1">&nbsp;&nbsp;</span></h2></div>
+                    <div class="col-sm-1"><h2><span class="label label-default" id="d2">&nbsp;&nbsp;</span></h2></div>
+                </div>
+            </div>
+            <br/>
+            <div hidden id="result" class="well">
+                <h2 id="resultHeader">{{resultTitle}}</h2>
+                <p id="resultDescription">{{resultDescription}}</p>
+            </div>
+
+            <br/>
+            <script>
+                Array.prototype.choice = function(){
+                    return this[Math.floor(Math.random()*this.length)];
+                }
+
+                function render(template, context) {
+                    while (template.indexOf("{{") > -1) {
+                        var updatedContext = JSON.parse(JSON.stringify(context));
+                        for (var key in updatedContext) {
+                            var valArray = updatedContext[key].split("|");
+                            var valChoice = valArray.choice();
+                            updatedContext[key] = valChoice;
+                        }
+                        template = Mustache.render(template, updatedContext);
+                    }
+                    return template;
+                }
+
+                var context = kobolds;
+
+                function loadTable(tableName) {
+
+                    context = eval(tableName);
+
+                    $("#d1").hide();
+                    $("#d2").hide();
+                    $("#dice").hide();
+                    $("#result").hide();
+
+                    templateNames = ['#title', '#description']
+                    for (var i=0; i<templateNames.length; i++) {
+                        var templateName = templateNames[i];
+                        var template = $(templateName).html();
+                        var rendered = render(template, context);
+                        $(templateName).html(rendered);
+                    }
+                }
+
+                loadTable('kobolds');
+
+                function roll() {
+                    $("#d1").hide();
+                    $("#d2").hide();
+
+                    var advantage = "neutral";
+
+                    var roll1 = Math.floor(Math.random() * (20 - 1 + 1)) + 1;
+                    var roll2 = Math.floor(Math.random() * (20 - 1 + 1)) + 1;
+
+                    if ($("#disadvantage").hasClass("active")) {
+                        advantage="disadvantage";
+                    } else if ($("#neutral").hasClass("active")) {
+                        advantage="neutral";
+                    } else if ($("#advantage").hasClass("active")) {
+                        advantage="advantage";
+                    }
+
+                    $("#dice").hide("fast");
+                    $("#dice").show("fast");
+
+                    var roll = roll1
+                    if (advantage == "advantage" || advantage == "disadvantage") {
+                        $("#d1").text(roll1);
+                        $("#d1").show();
+                        $("#d2").text(roll2);
+                        $("#d2").show();
+                        if (advantage == "advantage") {
+                            roll = Math.max(roll1, roll2);
+                        } else {
+                            roll = Math.min(roll1, roll2);
+                        }
+                    } else {
+                        $("#d1").text(roll1);
+                        $("#d1").show();
+                    }
+                    $("#result").hide();
+                    $("#result").show("slow");
+
+                    var rollOptions = [];
+                    for (var key in context) {
+
+                        if (key.indexOf(roll.toString()) == 0 && key.split('-')[0] == roll.toString()) {
+                            optionName = key.split('-')[1];
+                            if (!(optionName in rollOptions)) {
+                                rollOptions[optionName] = []
+                            }
+                            if (key.indexOf('title') > -1) {
+                                rollOptions[optionName]['title'] = context[key];
+                            } else if (key.indexOf('description') > -1) {
+                                rollOptions[optionName]['description'] = context[key];
+                            }
+                        }
+                    }
+
+                    resultKey = Object.keys(rollOptions).choice();
+
+                    $("#resultHeader").text(render(rollOptions[resultKey]['title'], context));
+                    $("#resultDescription").text(render(rollOptions[resultKey]['description'], context));
+
+                }
+            </script>
+            </div>
+        </div>
+    </div>
+    <div>
+        <a href="http://www.freezebeam.com"><p class="text-center">Matt Fister | freezebeam.com</p></a>
+    </div>
+    <img class="img-responsive" src="kobolds.jpg" style="float: right;" alt="KOBOLDS!!!"/>
+</div>
+</body>
+</html>
