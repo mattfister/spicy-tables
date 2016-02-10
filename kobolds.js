@@ -24,6 +24,10 @@ var kobolds = {
     "4-trap-title": "Trap Queen",
     "4-trap-description": "One of the kobolds controls a mechanism that can {{mechanism_result}}.",
 
+    "ritual": "the leader will be magically alarmed|a powerful monster will be summoned|a powerful demon will be summoned|the kobolds will become more powerful|the heroes will be weakened",
+    "5-ritual-title": "Ritual!",
+    "5-ritual-description": "The kobolds are performing a ritual. If not interrupted, {{ritual}}.",
+
     "siege": "catapult|ballista|magic wand",
     "6-duck-title": "Duck!",
     "6-duck-description": "The kobolds were prepared for this assault. One of them is pointing a {{siege}} at the entrance.",
