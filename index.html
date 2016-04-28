@@ -51,7 +51,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-primary navbar-btn" onclick="roll(); return false;">Roll D20</button>
+                        <button id="rollButton" type="button" class="btn btn-primary navbar-btn"; return false;">Roll D{{roll-label}}</button>
                     </form>
                 </div>
                 <div class="row" hidden id="dice">
@@ -98,26 +98,29 @@
 
                     $("#title").html("{{title}}");
                     $("#description").html("{{description}}");
+                    $("#rollButton").html("Roll D{{roll}}")
 
-                    templateNames = ['#title', '#description'];
+                    templateNames = ['#title', '#description', "#rollButton"];
                     for (var i=0; i<templateNames.length; i++) {
                         var templateName = templateNames[i];
                         var template = $(templateName).html();
                         var rendered = render(template, context);
                         $(templateName).html(rendered);
                     }
+
+                    $("#rollButton").attr("onclick", render("roll({{roll}});", context))
                 }
 
                 loadTable('kobolds');
 
-                function roll() {
+                function roll(dice) {
                     $("#d1").hide();
                     $("#d2").hide();
 
                     var advantage = "neutral";
 
-                    var roll1 = Math.floor(Math.random() * (20 - 1 + 1)) + 1;
-                    var roll2 = Math.floor(Math.random() * (20 - 1 + 1)) + 1;
+                    var roll1 = Math.floor(Math.random() * (dice - 1 + 1)) + 1;
+                    var roll2 = Math.floor(Math.random() * (dice - 1 + 1)) + 1;
 
                     if ($("#disadvantage").hasClass("active")) {
                         advantage="disadvantage";

@@ -4,6 +4,8 @@ var kobolds = {
     Kobolds in the next room. But everyone is bored with a straight up fight. How can we make this interesting? This \
     page is a table of some spicy encounter ideas for encounters with groups of social monsters. \
     Choose to give the party advantage or disadvantage and roll a d20!",
+    "roll": "20",
+
 
     "shining": "glowing|shining",
     "1-mega-title": "Mega Kobold",

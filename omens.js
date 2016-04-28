@@ -1,6 +1,7 @@
 var omens = {
     "title": "Spicy Omens",
     "description": "The future reveals itself in strange ways. Roll the dice to see how fortune and fate is manifested.",
+    "roll": "20",
 
     "stepped_on": "a mirror, shattering it|an eggshell, breaking it|a grave|one of the others\' foot",
     "1-watch-title": "Watch Your Step",
