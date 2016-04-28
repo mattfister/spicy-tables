@@ -89,6 +89,44 @@
 
                 var context = kobolds;
 
+                /**
+                 * From http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
+                 */
+                function getParameterByName( name ){
+                    var regexS = "[\\?&]"+name+"=([^&#]*)",
+                            regex = new RegExp( regexS ),
+                            results = regex.exec( window.location.search );
+                    if( results == null ){
+                        return "";
+                    } else{
+                        return decodeURIComponent(results[1].replace(/\+/g, " "));
+                    }
+                }
+
+                /**
+                 * Add a URL parameter (or changing it if it already exists) From http://stackoverflow.com/questions/486896/adding-a-parameter-to-the-url-with-javascript
+                 * @param {search} string  this is typically document.location.search
+                 * @param {key}    string  the key to set
+                 * @param {val}    string  value
+                 */
+                var addUrlParam = function(search, key, val){
+                    var newParam = key + '=' + val,
+                            params = '?' + newParam;
+
+                    // If the "search" string exists, then build params from it
+                    if (search) {
+                        // Try to replace an existance instance
+                        params = search.replace(new RegExp('([?&])' + key + '[^&]*'), '$1' + newParam);
+
+                        // If nothing was replaced, then add the new param to the end
+                        if (params === search) {
+                            params += '&' + newParam;
+                        }
+                    }
+
+                    return params;
+                };
+
                 function loadTable(tableName) {
 
                     context = eval(tableName);
@@ -110,10 +148,21 @@
                         $(templateName).html(rendered);
                     }
 
-                    $("#rollButton").attr("onclick", render("roll({{roll}});", context))
+                    $("#rollButton").attr("onclick", render("roll({{roll}});", context));
+
+                    oldParam = getParameterByName('table');
+                    if (oldParam != tableName) {
+                        var newUrl = document.location.pathname + addUrlParam(document.location.search, 'table', tableName);
+                        history.pushState({}, null, newUrl)
+                    }
                 }
 
-                loadTable('kobolds');
+                tableParam = getParameterByName('table');
+                if (tableParam) {
+                    loadTable(tableParam);
+                } else {
+                    loadTable('kobolds');
+                }
 
                 function roll(dice) {
                     $("#d1").hide();
