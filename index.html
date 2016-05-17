@@ -13,7 +13,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.2.1/mustache.js"></script>
     <script src="kobolds.js"></script>
     <script src="omens.js"></script>
-    <script src="midboss.js"></script>
+    <script src="horrors.js"></script>
 </head>
 
 <body>
@@ -29,7 +29,7 @@
                 <ul class="dropdown-menu">
                     <li><a href="#" onclick="loadTable('kobolds')">Spicy Kobolds</a></li>
                     <li><a href="#" onclick="loadTable('omens')">Spicy Omens</a></li>
-                    <li><a href="#" onclick="loadTable('midboss')">Mid Boss</a></li>
+                    <li><a href="#" onclick="loadTable('horrors')">Astral Horrors</a></li>
                 </ul>
             </li>
         </ul>
@@ -203,6 +203,9 @@
                     $("#result").show("slow");
 
                     var rollOptions = [];
+
+
+
                     for (var key in context) {
 
                         if (key.indexOf(roll.toString()) == 0 && key.split('-')[0] == roll.toString()) {
