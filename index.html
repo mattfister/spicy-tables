@@ -7,10 +7,10 @@
     <meta name="description" content="For adding spice to RPG encounters.">
     <meta name="author" content="Matt Fister">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.2.1/mustache.js"></script>
+    <script src="tracery.js"></script>
     <script src="kobolds.js"></script>
     <script src="omens.js"></script>
     <script src="horrors.js"></script>
@@ -80,19 +80,25 @@
                 }
 
                 function render(template, context) {
+                    var fullyEvaled = new Map();
+                    var updatedContext = JSON.parse(JSON.stringify(context));
                     while (template.indexOf("{{") > -1) {
-                        var updatedContext = JSON.parse(JSON.stringify(context));
+                        updatedContext = JSON.parse(JSON.stringify(updatedContext));
                         for (var key in updatedContext) {
-                            var valArray = updatedContext[key].split("|");
-                            var valChoice = valArray.choice();
-                            updatedContext[key] = valChoice;
+                            if (!fullyEvaled.has[key]) {
+                                var valArray = updatedContext[key].split("|");
+                                var valChoice = valArray.choice();
+                                updatedContext[key] = valChoice;
+                                if (valChoice.indexOf("{{") == -1 && valChoice.indexOf("|") == -1) {
+                                    fullyEvaled.set(key, valChoice);
+                                }
+                            }
                         }
                         template = Mustache.render(template, updatedContext);
                     }
                     return template;
                 }
 
-                var context = kobolds;
 
                 /**
                  * From http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
@@ -134,7 +140,7 @@
 
                 function loadTable(tableName) {
 
-                    context = eval(tableName);
+                    var grammar = tracery.createGrammar(tableName);
 
                     $("#d1").hide();
                     $("#d2").hide();
@@ -145,7 +151,9 @@
                     $("#description").html("{{description}}");
                     $("#rollButton").html("Roll D{{roll}}")
 
-                    templateNames = ['#title', '#description', "#rollButton"];
+                    //templateNames = ['#title', '#description', "#rollButton"];
+                    templateNames = ['#description']
+
                     for (var i=0; i<templateNames.length; i++) {
                         var templateName = templateNames[i];
                         var template = $(templateName).html();
@@ -162,12 +170,7 @@
                     }
                 }
 
-                tableParam = getParameterByName('table');
-                if (tableParam) {
-                    loadTable(tableParam);
-                } else {
-                    loadTable('kobolds');
-                }
+
 
                 function roll(dice) {
                     $("#d1").hide();
@@ -232,6 +235,16 @@
                     $("#resultDescription").text(render(rollOptions[resultKey]['description'], context));
 
                 }
+
+               $(window).bind("load", function() {
+                    var context = kobolds;
+                    tableParam = getParameterByName('table');
+                    if (tableParam) {
+                        loadTable(tableParam);
+                    } else {
+                        loadTable('kobolds');
+                    }
+                });
             </script>
             </div>
         </div>
