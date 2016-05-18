@@ -9,8 +9,11 @@ horrors = {
     "name": "#nameStart##nameSyl##nameSyl#",
 
 
-    "formSentence": "#name# takes the form of a ethereal cat monster.",
+    "formSentence": "#horror# takes the form of a ethereal cat monster.",
+    "eatsSentence": "#horror# eats children.",
+
+    "horror-description": "#formSentence# #eatsSentence#",
 
     "1-midboss-title": "An Astral Horror Appears!",
-    "1-midboss-description": "#formSentence# #name#"
+    "1-midboss-description": "#[horror:#name#]horror-description#"
 }

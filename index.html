@@ -10,6 +10,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.2.1/mustache.js"></script>
     <script src="tracery.js"></script>
     <script src="kobolds.js"></script>
     <script src="omens.js"></script>
@@ -79,26 +80,6 @@
                     return this[Math.floor(Math.random()*this.length)];
                 }
 
-                function render(template, context) {
-                    var fullyEvaled = new Map();
-                    var updatedContext = JSON.parse(JSON.stringify(context));
-                    while (template.indexOf("{{") > -1) {
-                        updatedContext = JSON.parse(JSON.stringify(updatedContext));
-                        for (var key in updatedContext) {
-                            if (!fullyEvaled.has[key]) {
-                                var valArray = updatedContext[key].split("|");
-                                var valChoice = valArray.choice();
-                                updatedContext[key] = valChoice;
-                                if (valChoice.indexOf("{{") == -1 && valChoice.indexOf("|") == -1) {
-                                    fullyEvaled.set(key, valChoice);
-                                }
-                            }
-                        }
-                        template = Mustache.render(template, updatedContext);
-                    }
-                    return template;
-                }
-
 
                 /**
                  * From http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
@@ -138,9 +119,12 @@
                     return params;
                 };
 
-                function loadTable(tableName) {
 
-                    var grammar = tracery.createGrammar(tableName);
+                var currentTable;
+                var context;
+                function loadTable(tableName) {
+                    currentTable = tableName;
+                    context = eval(tableName);
 
                     $("#d1").hide();
                     $("#d2").hide();
@@ -151,28 +135,31 @@
                     $("#description").html("{{description}}");
                     $("#rollButton").html("Roll D{{roll}}")
 
-                    //templateNames = ['#title', '#description', "#rollButton"];
-                    templateNames = ['#description']
+                    templateNames = ['#title', '#description', "#rollButton"];
+
 
                     for (var i=0; i<templateNames.length; i++) {
                         var templateName = templateNames[i];
                         var template = $(templateName).html();
-                        var rendered = render(template, context);
+                        var rendered = Mustache.render(template, context);
                         $(templateName).html(rendered);
                     }
 
-                    $("#rollButton").attr("onclick", render("roll({{roll}});", context));
+                    $("#rollButton").attr("onclick", Mustache.render("roll({{roll}});", context));
 
                     oldParam = getParameterByName('table');
                     if (oldParam != tableName) {
                         var newUrl = document.location.pathname + addUrlParam(document.location.search, 'table', tableName);
                         history.pushState({}, null, newUrl)
                     }
+
                 }
 
 
 
                 function roll(dice) {
+                    var grammar = tracery.createGrammar(eval(currentTable))
+
                     $("#d1").hide();
                     $("#d2").hide();
 
@@ -231,9 +218,9 @@
 
                     resultKey = Object.keys(rollOptions).choice();
 
-                    $("#resultHeader").text(render(rollOptions[resultKey]['title'], context));
-                    $("#resultDescription").text(render(rollOptions[resultKey]['description'], context));
+                    $("#resultHeader").text(rollOptions[resultKey]['title']);
 
+                    $("#resultDescription").text(grammar.flatten(rollOptions[resultKey]['description']));
                 }
 
                $(window).bind("load", function() {
