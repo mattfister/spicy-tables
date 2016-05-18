@@ -34,6 +34,6 @@ horrors = {
 
     "horror-description": "#formSentence# #eatsSentence# #attackSentence#",
 
-    "1-midboss-title": "",
-    "1-midboss-description": "#[horror:#name#]horror-description#"
+    "1-horror-title": "",
+    "1-horror-description": "#[horror:#name#]horror-description#"
 }
