@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Spicy Kobolds</title>
+    <title>Spicy Tables</title>
     <meta name="description" content="Random tables for adding spice to RPG encounters.">
     <meta name="author" content="Matt Fister">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -131,7 +131,6 @@
                     return params;
                 };
 
-
                 var currentTable;
                 var context;
                 function loadTable(tableName) {
@@ -164,7 +163,6 @@
                         var newUrl = document.location.pathname + addUrlParam(document.location.search, 'table', tableName);
                         history.pushState({}, null, newUrl)
                     }
-
                 }
 
                 function roll(dice) {
