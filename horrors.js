@@ -6,13 +6,32 @@ horrors = {
     "nameStart": ["Ch","X","S","Ick","Ix","Ex","Ax","Ach","Gr"],
     "nameSyl": ["iz","ix","ez","az","ach","ech","ich","eb","aarg","arth","irth","erth","earth"],
 
-    "name": "#nameStart##nameSyl##nameSyl#",
+    "name1": ["#nameStart##nameSyl##nameSyl#", "#nameStart##nameSyl#", "#nameStart##nameSyl##nameSyl##nameSyl#"],
 
+    "name": ["#name1#", "#name1# #name1#"],
 
-    "formSentence": "#horror# takes the form of a ethereal cat monster.",
-    "eatsSentence": "#horror# eats children.",
+    "animal": ["cat", "jellyfish", "starfish", "urchin", "elephant", "ape", "coral"],
 
-    "horror-description": "#formSentence# #eatsSentence#",
+    "bodyPart": ["disembodied brain", "disembodied eyeball", "disembodied mouth"],
+
+    "formState": ["glowing", "burning", "shimmering", "transparent", "ethereal", "slimy", "scaly"],
+
+    "form": ["#animal#", "#bodyPart#"],
+
+    "formSentence": "#horror# takes the form of a #formState# #form# monster.",
+
+    "eatsVerb": ["eats", "feeds upon"],
+    "eatsNoun": ["blood", "psychic energy", "children", "innocents", "darkness", "magical energy", "hope", "dreams"],
+
+    "eatsSentence": "#horror# #eatsVerb# #eatsNoun#.",
+
+    "attacksWith": ["bites", "tentacles", "talons", "claws", "fire"],
+
+    "attackAdj": ["vicious", "powerful", "fierce", "energized", "electric", "piercing", "sticky"],
+
+    "attackSentence": "It attacks with #attackAdj# #attacksWith#.",
+
+    "horror-description": "#formSentence# #eatsSentence# #attackSentence#",
 
     "1-midboss-title": "An Astral Horror Appears!",
     "1-midboss-description": "#[horror:#name#]horror-description#"
