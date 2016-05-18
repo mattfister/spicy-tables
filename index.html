@@ -4,13 +4,14 @@
 <head>
     <meta charset="utf-8">
     <title>Spicy Kobolds</title>
-    <meta name="description" content="For adding spice to RPG encounters.">
+    <meta name="description" content="Random tables for adding spice to RPG encounters.">
     <meta name="author" content="Matt Fister">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.2.1/mustache.js"></script>
+    <script src="tracery.js"></script>
     <script src="kobolds.js"></script>
     <script src="omens.js"></script>
     <script src="horrors.js"></script>
@@ -18,22 +19,40 @@
 
 <body>
 <div class="container">
-    <nav class="navbar navbar-default">
-        <div class="container-fluid"/>
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#">Spicy Tables</a>
+    <header>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid"/>
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Spicy Tables</a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Pick a Table <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" onclick="loadTable('kobolds')">Spicy Kobolds</a></li>
+                        <li><a href="#" onclick="loadTable('omens')">Spicy Omens</a></li>
+                        <li><a href="#" onclick="loadTable('horrors')">Astral Horrors</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <!-- About Modal -->
+    <div class="modal fade" id="aboutModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">About Spicy Tables</h4>
+                </div>
+                <div class="modal-body">
+                    Spicy Tables is a collection of random roll tables designed to spice up role playing games. It was built by <a href="http://freezebeam.com">Matt Fister</a>. It is built on <a href="https://github.com/galaxykate/tracery">Tracery</a>, by <a href="http://www.galaxykate.com/">Kate Compton</a>, <a href="https://mustache.github.io/">{{ mustache }}</a>, <a href="http://getbootstrap.com/">bootsrap</a>, and <a href="https://jquery.com/">jquery</a>.
+                    The source is available at <a href="https://github.com/mattfister/spicy-tables">Github</a>. It is easy to fork and build your own generators! <a href="https://twitter.com/matt_fister">Contact me for info.</a>
+                </div>
+            </div>
         </div>
-        <ul class="nav navbar-nav navbar-right">
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Pick a Table <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                    <li><a href="#" onclick="loadTable('kobolds')">Spicy Kobolds</a></li>
-                    <li><a href="#" onclick="loadTable('omens')">Spicy Omens</a></li>
-                    <li><a href="#" onclick="loadTable('horrors')">Astral Horrors</a></li>
-                </ul>
-            </li>
-        </ul>
-    </nav>
+    </div>
+    <!-- End About Modal -->
     <div class="panel panel-default" style="max-width: 800px; margin-left: auto; margin-right: auto;">
         <div class="panel-heading"><h2 class="text-center" id="title">{{title}}</h2></div>
         <div class="panel-body">
@@ -74,21 +93,6 @@
                     return this[Math.floor(Math.random()*this.length)];
                 }
 
-                function render(template, context) {
-                    while (template.indexOf("{{") > -1) {
-                        var updatedContext = JSON.parse(JSON.stringify(context));
-                        for (var key in updatedContext) {
-                            var valArray = updatedContext[key].split("|");
-                            var valChoice = valArray.choice();
-                            updatedContext[key] = valChoice;
-                        }
-                        template = Mustache.render(template, updatedContext);
-                    }
-                    return template;
-                }
-
-                var context = kobolds;
-
                 /**
                  * From http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
                  */
@@ -127,8 +131,11 @@
                     return params;
                 };
 
-                function loadTable(tableName) {
 
+                var currentTable;
+                var context;
+                function loadTable(tableName) {
+                    currentTable = tableName;
                     context = eval(tableName);
 
                     $("#d1").hide();
@@ -141,30 +148,28 @@
                     $("#rollButton").html("Roll D{{roll}}")
 
                     templateNames = ['#title', '#description', "#rollButton"];
+
+
                     for (var i=0; i<templateNames.length; i++) {
                         var templateName = templateNames[i];
                         var template = $(templateName).html();
-                        var rendered = render(template, context);
+                        var rendered = Mustache.render(template, context);
                         $(templateName).html(rendered);
                     }
 
-                    $("#rollButton").attr("onclick", render("roll({{roll}});", context));
+                    $("#rollButton").attr("onclick", Mustache.render("roll({{roll}});", context));
 
                     oldParam = getParameterByName('table');
                     if (oldParam != tableName) {
                         var newUrl = document.location.pathname + addUrlParam(document.location.search, 'table', tableName);
                         history.pushState({}, null, newUrl)
                     }
-                }
 
-                tableParam = getParameterByName('table');
-                if (tableParam) {
-                    loadTable(tableParam);
-                } else {
-                    loadTable('kobolds');
                 }
 
                 function roll(dice) {
+                    var grammar = tracery.createGrammar(eval(currentTable))
+
                     $("#d1").hide();
                     $("#d2").hide();
 
@@ -204,8 +209,6 @@
 
                     var rollOptions = [];
 
-
-
                     for (var key in context) {
 
                         if (key.indexOf(roll.toString()) == 0 && key.split('-')[0] == roll.toString()) {
@@ -223,18 +226,35 @@
 
                     resultKey = Object.keys(rollOptions).choice();
 
-                    $("#resultHeader").text(render(rollOptions[resultKey]['title'], context));
-                    $("#resultDescription").text(render(rollOptions[resultKey]['description'], context));
+                    $("#resultHeader").text(rollOptions[resultKey]['title']);
 
+                    $("#resultDescription").text(grammar.flatten(rollOptions[resultKey]['description']));
                 }
+
+               $(window).bind("load", function() {
+                    var context = kobolds;
+                    tableParam = getParameterByName('table');
+                    if (tableParam) {
+                        loadTable(tableParam);
+                    } else {
+                        loadTable('kobolds');
+                    }
+                });
             </script>
             </div>
         </div>
     </div>
     <div>
-        <a href="http://www.freezebeam.com"><p class="text-center">Matt Fister | freezebeam.com</p></a>
+
     </div>
-    <img class="img-responsive" src="kobolds.jpg" style="float: right;" alt="KOBOLDS!!!"/>
 </div>
+<footer class="navbar navbar-default navbar-fixed-bottom">
+    <div class="container-fluid"/>
+    <ul class="nav navbar-nav navbar-right">
+        <li><a href="http://www.freezebeam.com">Matt Fister&mdash;freezebeam.com</a></li>
+        <li><a href="#" data-toggle="modal" data-target="#aboutModal">About</a></li>
+    </ul>
+</footer>
 </body>
+
 </html>
