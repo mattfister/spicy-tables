@@ -11,6 +11,9 @@ var horrors = {
     "name": "{{nameStart}}{{nameSyl}}{{nameSyl}}|{{nameStart}}{{nameSyl}}|{{nameStart}}{{nameSyl}} {{nameStart}}{{nameSyl}}|{{nameStart}}{{nameSyl}} {{nameStart2}}{{nameSyl2}}",
 
 
+
+    "formSentence": "{{name}} takes the form of a ethereal cat monster.",
+
     "1-midboss-title": "{{name}}",
-    "1-midboss-description": "John 'The Badger' Collins is a weretiger bounty hunter. In his left hand is 'Raygar', an enchanted orcish raygun. His right hand holds 'Delaware', an ancient stone shield."
+    "1-midboss-description": "{{formSentence}} "
 }
