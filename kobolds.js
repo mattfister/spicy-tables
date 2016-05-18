@@ -5,6 +5,7 @@ var kobolds = {
     page is a table of some spicy encounter ideas for encounters with groups of social monsters. \
     Choose to give the party advantage or disadvantage and roll a d20!",
     "roll": "20",
+    "description-image": "kobold.png",
 
 
     "shining": ["glowing", "shining"],

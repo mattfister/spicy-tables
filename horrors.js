@@ -2,6 +2,7 @@ horrors = {
     "title": "Astral Horrors",
     "description": "As a feeling of unspeakable dread washes over them, the adventurers realize that they have attracted the attention of a strange being from a distant plane or dimension.",
     "roll": "1",
+    "description-image": "horror.png",
 
     "nameStart": ["Ch","X","S","Ick","Ix","Ex","Ax","Ach","Gr"],
     "nameSyl": ["iz","ix","ez","az","ach","ech","ich","eb","aarg","arth","irth","erth","earth"],
@@ -27,12 +28,12 @@ horrors = {
 
     "attacksWith": ["bites", "tentacles", "talons", "claws", "fire"],
 
-    "attackAdj": ["vicious", "powerful", "fierce", "energized", "electric", "piercing", "sticky"],
+    "attackAdj": ["vicious", "powerful", "fierce", "energized", "electric", "piercing", "sticky", "draining"],
 
     "attackSentence": "It attacks with #attackAdj# #attacksWith#.",
 
     "horror-description": "#formSentence# #eatsSentence# #attackSentence#",
 
-    "1-midboss-title": "An Astral Horror Appears!",
+    "1-midboss-title": "",
     "1-midboss-description": "#[horror:#name#]horror-description#"
 }
