@@ -11,11 +11,11 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.2.1/mustache.js"></script>
-    <script src="tracery.js"></script>
-    <script src="kobolds.js"></script>
-    <script src="omens.js"></script>
-    <script src="horrors.js"></script>
-    <script src="artifacts.js"></script>
+    <script src="lib/tracery.js"></script>
+    <script src="tables/kobolds.js"></script>
+    <script src="tables/omens.js"></script>
+    <script src="tables/horrors.js"></script>
+    <script src="tables/artifacts.js"></script>
 </head>
 
 <body>
@@ -48,8 +48,13 @@
                     <h4 class="modal-title" id="myModalLabel">About Spicy Tables</h4>
                 </div>
                 <div class="modal-body">
-                    Spicy Tables is a collection of random roll tables designed to spice up role playing games, and framework for building new ones. It was created by <a href="http://freezebeam.com">Matt Fister</a>. It is built on <a href="https://github.com/galaxykate/tracery">Tracery</a>, by <a href="http://www.galaxykate.com/">Kate Compton</a>, <a href="https://mustache.github.io/">{{mustache}}</a>, <a href="http://getbootstrap.com/">bootstrap</a>, and <a href="https://jquery.com/">jquery</a>.
-                    The source is available at <a href="https://github.com/mattfister/spicy-tables">Github</a>. It is easy to fork and build your own generators! <a href="https://twitter.com/matt_fister">Contact me for info.</a>
+                    Spicy Tables is a collection of random roll tables with text generation designed to spice up role playing games,
+                    and a framework for building new ones. It was created by <a href="http://freezebeam.com">Matt Fister</a>.
+                    It is built on <a href="https://github.com/galaxykate/tracery">Tracery</a>,
+                    by <a href="http://www.galaxykate.com/">Kate Compton</a>, <a href="https://mustache.github.io/">{{mustache}}</a>,
+                    <a href="http://getbootstrap.com/">bootstrap</a>, and <a href="https://jquery.com/">jquery</a>.
+                    The source is available at <a href="https://github.com/mattfister/spicy-tables">Github</a>.
+                    It is easy to fork and build your own generators! <a href="https://twitter.com/matt_fister">Contact me for info.</a>
                 </div>
             </div>
         </div>
@@ -63,7 +68,7 @@
                     <p id="description">{{description}}</p>
                 </div>
                 <div class="col-md-6">
-                    <img id="image" style="width: 100%;" src="kobold.png"/>
+                    <img id="image" style="width: 100%;" src="img/kobold.png"/>
                 </div>
             </div>
             <br/>
@@ -144,7 +149,7 @@
                     currentTable = tableName;
                     context = eval(tableName);
 
-                    $("#image").attr("src", Mustache.render("{{description-image}}", context));
+                    $("#image").attr("src", Mustache.render("img/{{description-image}}", context));
 
                     $("#d1").hide();
                     $("#d2").hide();
@@ -253,10 +258,10 @@
         </div>
     </div>
 </div>
-<footer class="navbar navbar-default navbar-fixed-bottom">
+<footer class="navbar navbar-default">
     <div class="container-fluid"/>
     <ul class="nav navbar-nav navbar-right">
-        <li><a href="http://www.freezebeam.com">Matt Fister&mdash;freezebeam.com</a></li>
+        <li><a href="http://www.freezebeam.com">By Matt Fister</a></li>
         <li><a href="#" data-toggle="modal" data-target="#aboutModal">About</a></li>
     </ul>
 </footer>
