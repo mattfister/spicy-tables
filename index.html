@@ -12,6 +12,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.2.1/mustache.js"></script>
     <script src="lib/tracery.js"></script>
+    <script src="lib/mods-eng-basic.js"></script>
     <script src="tables/kobolds.js"></script>
     <script src="tables/omens.js"></script>
     <script src="tables/horrors.js"></script>
@@ -182,7 +183,8 @@
                 }
 
                 function roll(dice) {
-                    var grammar = tracery.createGrammar(eval(currentTable))
+                    var grammar = tracery.createGrammar(eval(currentTable));
+                    grammar.addModifiers(baseEngModifiers);
 
                     $("#d1").hide();
                     $("#d2").hide();
